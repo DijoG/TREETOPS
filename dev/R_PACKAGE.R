@@ -16,3 +16,8 @@ require(TREETOPS)
 ?get_MARKER
 ?get_LEVELz
 
+# install TREETOPS
+Sys.setenv(R_REMOTES_STANDALONE = "true")
+devtools::install_github("DijoG/TREETOPS", build = F)
+
+
