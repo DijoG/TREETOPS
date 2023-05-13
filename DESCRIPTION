@@ -1,0 +1,7 @@
+Package: TREETOPS
+Type: Package
+Title: GTR
+Version: 0.0.1.0
+Description: GTR algorithm as proposed by Dioszegi et al., (2023).
+Encoding: UTF-8
+RoxygenNote: 7.2.3
