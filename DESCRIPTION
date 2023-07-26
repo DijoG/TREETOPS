@@ -1,0 +1,11 @@
+Package: TREETOPS
+Type: Package
+Title: GTR
+Version: 0.1.0
+Author: Gergo Dioszegi
+Maintainer: The package maintainer <dijogergo@gmail.com>
+Description: GTR algorithm as proposed by Dioszegi et al., (2023).
+License: MTI
+Encoding: UTF-8
+LazyData: true
+RoxygenNote: 7.2.3
