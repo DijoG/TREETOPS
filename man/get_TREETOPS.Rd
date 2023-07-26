@@ -11,7 +11,7 @@ get_TREETOPS(CHM_g, min_H, level_increment = 0.2)
 
 \item{min_H}{numeric, minimum (Z) value of chm, higher values can be treetops}
 
-\item{level_increment}{numeric, level cutting increment (default ~ NULL ~ 0.2m)}
+\item{level_increment}{numeric, level cutting increment (default = 0.2m)}
 }
 \value{
 sf object

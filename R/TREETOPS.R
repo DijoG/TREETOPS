@@ -172,7 +172,7 @@ get_CCC <- function(level_raster, level_rasterMINone, level = NULL) {
 #' MAIN FUNCTION for obtaining treetops.
 #' @param CHM_g SpatRaster object, raster chm derived from las
 #' @param min_H numeric, minimum (Z) value of chm, higher values can be treetops
-#' @param level_increment numeric, level cutting increment (default ~ NULL ~ 0.2m)
+#' @param level_increment numeric, level cutting increment (default = 0.2m)
 #' @return sf object
 #' @export
 get_TREETOPS <- function(CHM_g, min_H, level_increment = 0.2) {
