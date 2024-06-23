@@ -28,9 +28,9 @@ get_LEVELz <- function(CHM_g, height_bin) {
     empty_r = CHM_g
     empty_r = terra::ifel(empty_r >= height_bin[h], 1, 0)
     cell = terra::cells(empty_r, 1)
-    #if (length(cell$focal_mean) < 4) {
-    #  empty_r = c(1,2,3)
-    #}
+    if (length(cell$Z) < 4) {
+      empty_r = c(1,2,3)
+    }
     
     ra[[h]] = empty_r
     names(ra[[h]]) = height_bin[h]
