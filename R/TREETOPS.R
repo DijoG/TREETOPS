@@ -19,6 +19,7 @@ get_HB <- function(CHM_g, level_increment, min_H) {
 #' @param CHM_g chm from las, SpatRaster
 #' @param height_bin numeric height bin vector returned by 'get_HB()' 
 #' @return stacked SpatRaster
+#' @export
 get_LEVELz <- function(CHM_g, height_bin) {
   
   ra = list()
