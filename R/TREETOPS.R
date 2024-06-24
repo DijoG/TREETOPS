@@ -23,6 +23,7 @@ get_HB <- function(CHM_g, level_increment, min_H) {
 get_LEVELz <- function(CHM_g, height_bin) {
   
   ra = list()
+  
   for (h in seq_along(height_bin)) {
     
     empty_r = CHM_g
@@ -57,7 +58,7 @@ get_MARKER <- function(CHM_g, GTR_ccomponent, GTR_marker) {
   
   # Patches of second, marker of first
   marker =
-    data.table::data.table(extract(GTR_ccomponent, GTR_marker)) %>%
+    data.table::data.table(terra::extract(GTR_ccomponent, GTR_marker)) %>%
     rename(marker = ID) %>%
     mutate_all(~replace(., is.nan(.), 0)) %>%
     filter(patches != 0)
@@ -71,7 +72,9 @@ get_MARKER <- function(CHM_g, GTR_ccomponent, GTR_marker) {
   for (i in seq_along(P_unique)) {
     
     # i-th patch
-    patchi = mask(CHM_g, ifel(GTR_ccomponent == P_unique[i], 1, NA)) %>% trim()
+    patchi = 
+      mask(CHM_g, ifel(GTR_ccomponent == P_unique[i], 1, NA)) %>% 
+      trim()
     
     # i-th marker
     mark =
@@ -141,12 +144,12 @@ get_CCC <- function(level_raster, level_rasterMINone, level = NULL) {
   }
   
   # Clumps labeling
-  clumps_lmo = patches(level_rasterMINone, zeroAsNA = TRUE, allowGaps = FALSE)
-  clumps_lmo_seg = segregate(clumps_lmo)
+  clumps_lmo = terra::patches(level_rasterMINone, zeroAsNA = TRUE, allowGaps = FALSE)
+  clumps_lmo_seg = terra::segregate(clumps_lmo)
   
   # 3b) GTR
   gtr = get_GTR(clumps_lmo_seg, m)
-  clumps_gtr = patches(ifel(gtr != 1, NA, gtr), zeroAsNA = TRUE, allowGaps = FALSE)
+  clumps_gtr = terra::patches(ifel(gtr != 1, NA, gtr), zeroAsNA = TRUE, allowGaps = FALSE)
   
   # Centroid for each of the patches of GTR (clumps_gtr)
   out_l = matrix(NA, nrow = max(values(clumps_gtr), na.rm = T), ncol = 3)
@@ -157,15 +160,15 @@ get_CCC <- function(level_raster, level_rasterMINone, level = NULL) {
     out_l[i, 3] = as.double(level)
   }
   
-  pts_l = vect(cbind(out_l[,1],out_l[,2]), crs = crs(level_raster)) # projection
+  pts_l = terra::vect(cbind(out_l[,1],out_l[,2]), crs = crs(level_raster)) # projection
   values(pts_l) = out_l[,3]
   
   pts_l = sf::st_as_sf(pts_l)
   names(pts_l)[1] = "Z_level"
   pts_l$marker = 1:nrow(pts_l)
   
-  return(list("GTR_marker" = pts_l,
-              "GTR_ccomponent" = clumps_gtr))
+  return(list(GTR_marker = pts_l,
+              GTR_ccomponent = clumps_gtr))
 }
 
 #' Getting treetops
