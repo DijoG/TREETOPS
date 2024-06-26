@@ -92,7 +92,7 @@ get_MARKER <- function(CHM_g, GTR_ccomponent, GTR_marker) {
       terra::extract(patchi, mark_pts)
     ttops_Z =
       mark_pts %>%
-      mutate(Z = ttops$focal_mean,
+      mutate(Z = ttops$Z,
              treeID = ttops$ID)
     
     TTL[[i]] = ttops_Z
