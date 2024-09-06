@@ -17,7 +17,6 @@ check_PACKS <- function() {
 #' Getting height levels I
 #'
 #' Function for getting height bin (numeric vector).
-#' @importFrom magrittr "%>%"
 #' @param CHM_g chm from las, SpatRaster
 #' @param level_increment numeric, height bin 
 #' @param min_H numeric, under this value no trees are reasonable
@@ -65,7 +64,6 @@ get_LEVELz <- function(CHM_g, height_bin) {
 #' Getting markers
 #' 
 #' Function for getting markers, its ids and heights (Z), used in 'get_TREETOPS()'. 
-#' @importFrom magrittr "%>%"
 #' @param CHM_g chm from las, SpatRaster
 #' @param GTR_ccomponent /result of get_CCC/ GTR patches from layer2 to layer3, level raster is layer3, SpatRaster (values n patches)
 #' @param GTR_marker /result of get_CCC/ GTR markers from layer1 to layer2, level raster is layer2, sf spatial points
@@ -120,7 +118,6 @@ get_MARKER <- function(CHM_g, GTR_ccomponent, GTR_marker) {
 #' Getting GTR and FETR
 #' 
 #' Function for binarizing patches into GROWING TREE REGIONS (GTR ~ 1) and FIRST EMERGING TREE REGION (FETR ~ 0), used in 'get_CCC()'.
-#' @importFrom magrittr "%>%"
 #' @param lmo_seg segregated patches defined in get_CCC, SpatRaster stack
 #' @param new_tr new tree region, SpatRaster (value 1)
 #' @return SpatRaster (value 1 GTR pixels, value 0 non-GTR pixels)
@@ -247,7 +244,6 @@ get_TREETOPS <- function(CHM_g, min_H, level_increment = 0.2) {
 #' Getting final treetops
 #' 
 #' MAIN FUNCTION for distance based treetop filtering using the output of 'get_TREETOPS()'.
-#' @importFrom magrittr "%>%"
 #' @param sf_TREETOPS sf object (output of 'get_TREETOPS()')
 #' @param distance numeric, distance between treetops in meters
 #' @param min_H numeric, minimum height of trees
@@ -325,7 +321,6 @@ M_diff_PROFILE <- function(profile, Zstart, Zstop) {
 #' The function finds the 3 nearest test tree points (knn), matches one (height difference and distance) and returns:
 #' - height difference between observed and test tree,
 #' - distance bewteen observed and test tree.
-#' @importFrom magrittr "%>%"
 #' @param refTT sf object, reference trees 
 #' @param testTT sf object, either GTR or VWF results, extracted treetops
 #' @param CHM_g SpatRAster, Gaussian smoothed chm generated from las
