@@ -155,7 +155,7 @@ get_CCC <- function(level_raster, level_rasterMINone, level = NULL) {
   if (1 %in% unique(terra::values(m))) {
     m = terra::ifel(m != 1, NA, m)
   } else {
-    stop(str_c("\n meaning:\n There is no growing tree from ", names(level_raster), " to ", names(level_rasterMINone), "\n Incease level increment or tile (i.e. chm) size!\n OR ~ delete ", names(level_raster), " from height bin!:)"))
+    stop(stringr::str_c("\n meaning:\n There is no growing tree from ", names(level_raster), " to ", names(level_rasterMINone), "\n Incease level increment or tile (i.e. chm) size!\n OR ~ delete ", names(level_raster), " from height bin!:)"))
   }
   
   # Clumps labeling
@@ -269,7 +269,7 @@ finalize_TREETOPS <- function(sf_TREETOPS, distance, min_H, max_H = NULL) {
     sf_TREETOPS %>%
     dplyr::slice(-unique(nearID$to)) %>%
     dplyr::filter(Z >= min_H & Z <= max_H) %>%
-    add_column(Z_range = str_c(as.character(min_H), " - ", as.character(max_H)), .before = "marker")
+    tibble::add_column(Z_range = stringr::str_c(as.character(min_H), " - ", as.character(max_H)), .before = "marker")
   
   return(TTout %>%
            dplyr::mutate(treeID = 1:nrow(.)))
@@ -334,11 +334,11 @@ M_match_TREETOPS <- function(refTT, testTT, CHM_g, eval_maxHD = 2, eval_maxD = 4
     refTT %>%
     dplyr::mutate(ID = 1:nrow(.)) %>%
     dplyr::select(ID) %>%
-    add_column(Z = terra::extract(CHM_g, terra::vect(refTT))$focal_mean, .after = 1)
+    tibble::add_column(Z = terra::extract(CHM_g, terra::vect(refTT))$focal_mean, .after = 1)
   
   testTT = 
     testTT %>%
-    add_column(ID = 1:nrow(testTT), .before = 1) %>%
+    tibble::add_column(ID = 1:nrow(testTT), .before = 1) %>%
     dplyr::select(ID, Z)
   
   treeID = refTT$ID
