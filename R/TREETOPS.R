@@ -96,7 +96,7 @@ get_MARKER <- function(CHM_g, GTR_ccomponent, GTR_marker) {
       marker %>%
       dplyr::filter(patches == P_unique[i]) %>%
       dplyr::select(marker) %>%
-      dplyr::pull
+      dplyr::pull()
     
     mark_pts =
       GTR_marker %>%
