@@ -8,9 +8,10 @@ check_PACKS <- function() {
   installable = required[!(required %in% installed.packages()[,"Package"])]
   if(length(installable) > 0) {
     install.packages(installable)
+    cat("All packages installed.")
     }
   else {
-    cat("All packages installed.\n")
+    cat("No need, packages already installed.\n")
     }
 }
 
