@@ -23,6 +23,8 @@ Demonstration of how to use **TREETOPS**.
 ### Data preparation
 
 ```r
+TREETOPS::check_PACKS()
+>All packages installed.
 require(lidR);require(tidyverse);require(terra);require(sf);require(crayon)
 
 # Forest point cloud (low resolution example data)
