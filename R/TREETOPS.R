@@ -260,9 +260,8 @@ finalize_TREETOPS <- function(sf_TREETOPS, distance, min_H, max_H = NULL) {
     dplyr::mutate(treeID = 1:nrow(.))
   ter_TREETOPS = terra::vect(sf_TREETOPS)
   
-  
   # Removing treetops falling in distance ~ radius (m) 
-  nearID = data.table::data.table(nearby(ter_TREETOPS, distance = distance))
+  nearID = data.table::data.table(terra::nearby(ter_TREETOPS, distance = distance))
   
   # Filtering height
   max_H = ifelse(is.numeric(max_H), max_H, max(sf_TREETOPS$Z))
