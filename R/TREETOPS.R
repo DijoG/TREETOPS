@@ -90,7 +90,7 @@ get_MARKER <- function(CHM_g, GTR_ccomponent, GTR_marker) {
     
     # i-th patch
     patchi = 
-      terra::mask(CHM_g, ifel(GTR_ccomponent == P_unique[i], 1, NA)) %>% 
+      terra::mask(CHM_g, terra::ifel(GTR_ccomponent == P_unique[i], 1, NA)) %>% 
       terra::trim()
     
     # i-th marker
@@ -129,15 +129,15 @@ get_GTR <- function(lmo_seg, new_tr) {
   
   for (i in 1:nlyr(lmo_seg)) {
     
-    cell_n_lmo = length(cells(ifel(lmo_seg[[i]] == 1, 1, NA)))
-    cell_n_lmo_newtr = cells(ifel(lmo_seg[[i]] == 1, 1, NA)) %in% cells(new_tr) %>% sum
+    cell_n_lmo = length(terra::cells(terra::ifel(lmo_seg[[i]] == 1, 1, NA)))
+    cell_n_lmo_newtr = terra::cells(terra::ifel(lmo_seg[[i]] == 1, 1, NA)) %in% terra::cells(new_tr) %>% sum
     
     if (cell_n_lmo_newtr != cell_n_lmo & cell_n_lmo_newtr > 0) {
       # 1 for GTR
-      lmo_seg[[i]] = ifel(lmo_seg[[i]] == 1, 1, NA)
+      lmo_seg[[i]] = terra::ifel(lmo_seg[[i]] == 1, 1, NA)
     } else {
       # 0 for FETR
-      lmo_seg[[i]] = ifel(lmo_seg[[i]] == 1, 0, NA)
+      lmo_seg[[i]] = terra::ifel(lmo_seg[[i]] == 1, 0, NA)
     }
   }
   return(max(lmo_seg, na.rm = T))
@@ -156,7 +156,7 @@ get_CCC <- function(level_raster, level_rasterMINone, level = NULL) {
   # First emerged tree region 
   m = terra::mask(level_rasterMINone, level_raster,  maskvalues = 1, updatevalue = 2)
   if (1 %in% unique(terra::values(m))) {
-    m = ifel(m != 1, NA, m)
+    m = terra::ifel(m != 1, NA, m)
   } else {
     stop(str_c("\n meaning:\n There is no growing tree from ", names(level_raster), " to ", names(level_rasterMINone), "\n Incease level increment or tile (i.e. chm) size!\n OR ~ delete ", names(level_raster), " from height bin!:)"))
   }
@@ -167,7 +167,7 @@ get_CCC <- function(level_raster, level_rasterMINone, level = NULL) {
   
   # 3b) GTR
   gtr = get_GTR(clumps_lmo_seg, m)
-  clumps_gtr = terra::patches(ifel(gtr != 1, NA, gtr), zeroAsNA = TRUE, allowGaps = FALSE)
+  clumps_gtr = terra::patches(terra::ifel(gtr != 1, NA, gtr), zeroAsNA = TRUE, allowGaps = FALSE)
   
   # Centroid for each of the patches of GTR (clumps_gtr)
   out_l = matrix(NA, nrow = max(terra::values(clumps_gtr), na.rm = T), ncol = 3)
