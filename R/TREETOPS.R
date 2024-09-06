@@ -196,6 +196,9 @@ get_CCC <- function(level_raster, level_rasterMINone, level = NULL) {
 #' @export
 get_TREETOPS <- function(CHM_g, min_H, level_increment = 0.2) {
   
+  require(dplyr)
+  require(terra)
+  
   # 1)
   height_bin <- get_HB(CHM_g, level_increment, min_H)
   
