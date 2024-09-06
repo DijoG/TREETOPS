@@ -127,7 +127,7 @@ get_MARKER <- function(CHM_g, GTR_ccomponent, GTR_marker) {
 #' @export
 get_GTR <- function(lmo_seg, new_tr) {
   
-  for (i in 1:nlyr(lmo_seg)) {
+  for (i in 1:terra::nlyr(lmo_seg)) {
     
     cell_n_lmo = length(terra::cells(terra::ifel(lmo_seg[[i]] == 1, 1, NA)))
     cell_n_lmo_newtr = terra::cells(terra::ifel(lmo_seg[[i]] == 1, 1, NA)) %in% terra::cells(new_tr) %>% sum
