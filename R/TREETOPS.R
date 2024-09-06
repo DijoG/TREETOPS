@@ -75,7 +75,7 @@ get_MARKER <- function(CHM_g, GTR_ccomponent, GTR_marker) {
   marker =
     data.table::data.table(terra::extract(GTR_ccomponent, GTR_marker)) %>%
     rename(marker = ID) %>%
-    mutate_all(~replace(., is.nan(.), 0)) %>%
+    dplyr::mutate_all(~replace(., is.nan(.), 0)) %>%
     filter(patches != 0)
   
   P_unique =
@@ -169,7 +169,7 @@ get_CCC <- function(level_raster, level_rasterMINone, level = NULL) {
   # Centroid for each of the patches of GTR (clumps_gtr)
   out_l = matrix(NA, nrow = max(terra::values(clumps_gtr), na.rm = T), ncol = 3)
   for (i in 1:max(terra::values(clumps_gtr), na.rm = T)) {
-    cmean = colMeans(xyFromCell(clumps_gtr, which(terra::values(clumps_gtr) == i)))
+    cmean = colMeans(terra::xyFromCell(clumps_gtr, which(terra::values(clumps_gtr) == i)))
     out_l[i, 1] = cmean[[1]]
     out_l[i, 2] = cmean[[2]]
     out_l[i, 3] = as.double(level)
