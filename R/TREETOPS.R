@@ -1,4 +1,18 @@
 
+#' Check packages
+#' @return installs missing packages
+#' @export
+check_packs <- function() {
+  required = c("terra", "tidyverse", "sf", "crayon", "data.table")
+  installable = required[!(required %in% installed.packages()[,"Package"])]
+  if(length(installable) > 0) {
+    install.packages(installable)
+    }
+  else {
+    cat("All packages installed.\n")
+    }
+}
+
 #' Getting height levels I
 #'
 #' Function for getting height bin (numeric vector).
@@ -180,6 +194,8 @@ get_CCC <- function(level_raster, level_rasterMINone, level = NULL) {
 #' @return sf object
 #' @export
 get_TREETOPS <- function(CHM_g, min_H, level_increment = 0.2) {
+  
+  check_packs()
   
   # 1)
   height_bin <- get_HB(CHM_g, level_increment, min_H)
