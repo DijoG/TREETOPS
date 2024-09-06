@@ -6,7 +6,7 @@ The **TREETOPS** package provides functions utilizing a growing tree region (GTR
 https://doi.org/10.1007/s40808-024-02060-w
 
 
-### Required packages
+### Required packages (make sure they are installed)
 
 tidyverse, terra, sf, data.table, crayon
 
