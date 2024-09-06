@@ -2,7 +2,7 @@
 
 export(M_diff_PROFILE)
 export(M_match_TREETOPS)
-export(check_packs)
+export(check_PACKS)
 export(finalize_TREETOPS)
 export(get_CCC)
 export(get_GTR)
