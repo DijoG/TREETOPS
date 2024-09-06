@@ -1,5 +1,5 @@
 
-usethis::use_pipe(export = TRUE)
+usethis::use_pipe()
 #' Check packages
 #' @return installs missing packages
 #' @export
