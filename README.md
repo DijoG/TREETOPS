@@ -25,7 +25,7 @@ Demonstration of how to use **TREETOPS**.
 ```r
 TREETOPS::check_PACKS()
 >All packages installed.
-require(lidR);require(tidyverse);require(terra);require(sf);require(crayon)
+require(lidR);require(tidyverse);require(terra)
 
 # Forest point cloud (low resolution example data)
 LASfile <- system.file("extdata", "MixedConifer.laz", package = "lidR")

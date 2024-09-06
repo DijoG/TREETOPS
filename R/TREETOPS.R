@@ -176,7 +176,7 @@ get_CCC <- function(level_raster, level_rasterMINone, level = NULL) {
   }
   
   pts_l = terra::vect(cbind(out_l[,1],out_l[,2]), crs = crs(level_raster)) # projection
-  values(pts_l) = out_l[,3]
+  #values(pts_l) = out_l[,3]
   
   pts_l = sf::st_as_sf(pts_l)
   names(pts_l)[1] = "Z_level"
