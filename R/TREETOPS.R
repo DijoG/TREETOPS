@@ -74,9 +74,9 @@ get_MARKER <- function(CHM_g, GTR_ccomponent, GTR_marker) {
   # Patches of second, marker of first
   marker =
     data.table::data.table(terra::extract(GTR_ccomponent, GTR_marker)) %>%
-    rename(marker = ID) %>%
+    dplyr::rename(marker = ID) %>%
     dplyr::mutate_all(~replace(., is.nan(.), 0)) %>%
-    filter(patches != 0)
+    dplyr::filter(patches != 0)
   
   P_unique =
     marker$patches %>% 
@@ -94,25 +94,25 @@ get_MARKER <- function(CHM_g, GTR_ccomponent, GTR_marker) {
     # i-th marker
     mark =
       marker %>%
-      filter(patches == P_unique[i]) %>%
-      select(marker) %>%
-      pull
+      dplyr::filter(patches == P_unique[i]) %>%
+      dplyr::select(marker) %>%
+      dplyr::pull
     
     mark_pts =
       GTR_marker %>%
-      filter(marker %in% mark)
+      dplyr::filter(marker %in% mark)
     
     # add Z (height) and treeID infos
     ttops =
       terra::extract(patchi, mark_pts)
     ttops_Z =
       mark_pts %>%
-      mutate(Z = ttops$Z,
+      dplyr::mutate(Z = ttops$Z,
              treeID = ttops$ID)
     
     TTL[[i]] = ttops_Z
   }
-  return(bind_rows(TTL))
+  return(dplyr::bind_rows(TTL))
 }
 
 #' Getting GTR and FETR
@@ -234,7 +234,7 @@ get_TREETOPS <- function(CHM_g, min_H, level_increment = 0.2) {
   }
   
   LOUT = LOUT[sapply(LOUT, function(x) class(x)[1] == "sf")]
-  LOUT = bind_rows(LOUT)
+  LOUT = dplyr::bind_rows(LOUT)
   
   cat(crayon::silver("\n_____ Done\n"))
   return(LOUT)
@@ -255,8 +255,8 @@ finalize_TREETOPS <- function(sf_TREETOPS, distance, min_H, max_H = NULL) {
   
   sf_TREETOPS =
     sf_TREETOPS %>%
-    arrange(desc(Z_level), desc(Z)) %>%
-    mutate(treeID = 1:nrow(.))
+    dplyr::arrange(desc(Z_level), desc(Z)) %>%
+    dplyr::mutate(treeID = 1:nrow(.))
   ter_TREETOPS = terra::vect(sf_TREETOPS)
   
   
@@ -267,12 +267,12 @@ finalize_TREETOPS <- function(sf_TREETOPS, distance, min_H, max_H = NULL) {
   max_H = ifelse(is.numeric(max_H), max_H, max(sf_TREETOPS$Z))
   TTout =
     sf_TREETOPS %>%
-    slice(-unique(nearID$to)) %>%
-    filter(Z >= min_H & Z <= max_H) %>%
+    dplyr::slice(-unique(nearID$to)) %>%
+    dplyr::filter(Z >= min_H & Z <= max_H) %>%
     add_column(Z_range = str_c(as.character(min_H), " - ", as.character(max_H)), .before = "marker")
   
   return(TTout %>%
-           mutate(treeID = 1:nrow(.)))
+           dplyr::mutate(treeID = 1:nrow(.)))
   
   
 }
@@ -332,14 +332,14 @@ M_match_TREETOPS <- function(refTT, testTT, CHM_g, eval_maxHD = 2, eval_maxD = 4
   
   refTT =
     refTT %>%
-    mutate(ID = 1:nrow(.)) %>%
-    select(ID) %>%
+    dplyr::mutate(ID = 1:nrow(.)) %>%
+    dplyr::select(ID) %>%
     add_column(Z = terra::extract(CHM_g, terra::vect(refTT))$focal_mean, .after = 1)
   
   testTT = 
     testTT %>%
     add_column(ID = 1:nrow(testTT), .before = 1) %>%
-    select(ID, Z)
+    dplyr::select(ID, Z)
   
   treeID = refTT$ID
   
@@ -351,27 +351,27 @@ M_match_TREETOPS <- function(refTT, testTT, CHM_g, eval_maxHD = 2, eval_maxD = 4
     cat("_____ treeID:", tID, "\r")
     
     # Getting the 3 nearest test trees (to the given reference tree)
-    nearID = data.table::data.table(nearby(terra::vect(refTT %>%
-                                                  filter(treeID == tID)), 
+    nearID = data.table::data.table(terra::nearby(terra::vect(refTT %>%
+                                                  dplyr::filter(treeID == tID)), 
                                            terra::vect(testTT), 
                                            k = 3)) %>%
-      pivot_longer(cols = k1:k3, values_to = "id_test", names_to = "centroids") %>%
-      rename("id_ref" = id) %>%
+      tidyr::pivot_longer(cols = k1:k3, values_to = "id_test", names_to = "centroids") %>%
+      dplyr::rename("id_ref" = id) %>%
       data.table::data.table()
     
     if (nrow(nearID) >= 1) {
       fromTT = 
         refTT %>%
-        filter(treeID == tID)
+        dplyr::filter(treeID == tID)
       toTT = 
         testTT %>%
-        slice(nearID$id_test)
+        dplyr::slice(nearID$id_test)
     } else {
       next
     }
     
     # Getting distance between reference tree and test trees
-    D = sf::st_distance(map_dfr(seq_len(nrow(toTT)), ~bind_rows(fromTT)), 
+    D = sf::st_distance(map_dfr(seq_len(nrow(toTT)), ~dplyr::bind_rows(fromTT)), 
                         toTT, 
                         by_element = T) %>%
       as.numeric()
@@ -407,12 +407,12 @@ M_match_TREETOPS <- function(refTT, testTT, CHM_g, eval_maxHD = 2, eval_maxD = 4
   # Filtering on max height (Z) difference (eval_maxHD) combined with distance (eval_maxD)
   # Output
   cat("\n_____ Done")
-  return(bind_rows(dfout) %>%
-           mutate(diff_h_reftest = abs(Z_start - Z_stop)) %>%
-           group_by(ref_ID) %>%
-           filter(distance == min(distance)) %>%
-           ungroup() %>% 
-           mutate(match = ifelse(diff_h_reftest <= eval_maxHD & distance <= eval_maxD, 1, 0),
+  return(dplyr::bind_rows(dfout) %>%
+           dplyr::mutate(diff_h_reftest = abs(Z_start - Z_stop)) %>%
+           dplyr::group_by(ref_ID) %>%
+           dplyr::filter(distance == min(distance)) %>%
+           dplyr::ungroup() %>% 
+           dplyr::mutate(match = ifelse(diff_h_reftest <= eval_maxHD & distance <= eval_maxD, 1, 0),
                   n_test = nrow(testTT)) %>%
            data.table::data.table())
 }
