@@ -16,13 +16,14 @@ check_PACKS <- function() {
 #' Getting height levels I
 #'
 #' Function for getting height bin (numeric vector).
+#' @importFrom magrittr "%>%"
 #' @param CHM_g chm from las, SpatRaster
 #' @param level_increment numeric, height bin 
 #' @param min_H numeric, under this value no trees are reasonable
 #' @return numeric vector 
 #' @export
 get_HB <- function(CHM_g, level_increment, min_H) {
-  return(seq(min(values(CHM_g), na.rm = T) + min_H, max(values(CHM_g), na.rm = T), level_increment) %>%
+  return(seq(min(terra::values(CHM_g), na.rm = T) + min_H, max(terra::values(CHM_g), na.rm = T), level_increment) %>%
            round(2) %>%
            rev)
 }
@@ -63,6 +64,7 @@ get_LEVELz <- function(CHM_g, height_bin) {
 #' Getting markers
 #' 
 #' Function for getting markers, its ids and heights (Z), used in 'get_TREETOPS()'. 
+#' @importFrom magrittr "%>%"
 #' @param CHM_g chm from las, SpatRaster
 #' @param GTR_ccomponent /result of get_CCC/ GTR patches from layer2 to layer3, level raster is layer3, SpatRaster (values n patches)
 #' @param GTR_marker /result of get_CCC/ GTR markers from layer1 to layer2, level raster is layer2, sf spatial points
@@ -117,6 +119,7 @@ get_MARKER <- function(CHM_g, GTR_ccomponent, GTR_marker) {
 #' Getting GTR and FETR
 #' 
 #' Function for binarizing patches into GROWING TREE REGIONS (GTR ~ 1) and FIRST EMERGING TREE REGION (FETR ~ 0), used in 'get_CCC()'.
+#' @importFrom magrittr "%>%"
 #' @param lmo_seg segregated patches defined in get_CCC, SpatRaster stack
 #' @param new_tr new tree region, SpatRaster (value 1)
 #' @return SpatRaster (value 1 GTR pixels, value 0 non-GTR pixels)
@@ -151,7 +154,7 @@ get_CCC <- function(level_raster, level_rasterMINone, level = NULL) {
   
   # First emerged tree region 
   m = terra::mask(level_rasterMINone, level_raster,  maskvalues = 1, updatevalue = 2)
-  if (1 %in% unique(values(m))) {
+  if (1 %in% unique(terra::values(m))) {
     m = ifel(m != 1, NA, m)
   } else {
     stop(str_c("\n meaning:\n There is no growing tree from ", names(level_raster), " to ", names(level_rasterMINone), "\n Incease level increment or tile (i.e. chm) size!\n OR ~ delete ", names(level_raster), " from height bin!:)"))
@@ -166,16 +169,16 @@ get_CCC <- function(level_raster, level_rasterMINone, level = NULL) {
   clumps_gtr = terra::patches(ifel(gtr != 1, NA, gtr), zeroAsNA = TRUE, allowGaps = FALSE)
   
   # Centroid for each of the patches of GTR (clumps_gtr)
-  out_l = matrix(NA, nrow = max(values(clumps_gtr), na.rm = T), ncol = 3)
-  for (i in 1:max(values(clumps_gtr), na.rm = T)) {
-    cmean = colMeans(xyFromCell(clumps_gtr, which(values(clumps_gtr) == i)))
+  out_l = matrix(NA, nrow = max(terra::values(clumps_gtr), na.rm = T), ncol = 3)
+  for (i in 1:max(terra::values(clumps_gtr), na.rm = T)) {
+    cmean = colMeans(xyFromCell(clumps_gtr, which(terra::values(clumps_gtr) == i)))
     out_l[i, 1] = cmean[[1]]
     out_l[i, 2] = cmean[[2]]
     out_l[i, 3] = as.double(level)
   }
   
   pts_l = terra::vect(cbind(out_l[,1],out_l[,2]), crs = crs(level_raster)) # projection
-  values(pts_l) = out_l[,3]
+  #values(pts_l) = out_l[,3]
   
   pts_l = sf::st_as_sf(pts_l)
   names(pts_l)[1] = "Z_level"
@@ -243,6 +246,7 @@ get_TREETOPS <- function(CHM_g, min_H, level_increment = 0.2) {
 #' Getting final treetops
 #' 
 #' MAIN FUNCTION for distance based treetop filtering using the output of 'get_TREETOPS()'.
+#' @importFrom magrittr "%>%"
 #' @param sf_TREETOPS sf object (output of 'get_TREETOPS()')
 #' @param distance numeric, distance between treetops in meters
 #' @param min_H numeric, minimum height of trees
@@ -320,6 +324,7 @@ M_diff_PROFILE <- function(profile, Zstart, Zstop) {
 #' The function finds the 3 nearest test tree points (knn), matches one (height difference and distance) and returns:
 #' - height difference between observed and test tree,
 #' - distance bewteen observed and test tree.
+#' @importFrom magrittr "%>%"
 #' @param refTT sf object, reference trees 
 #' @param testTT sf object, either GTR or VWF results, extracted treetops
 #' @param CHM_g SpatRAster, Gaussian smoothed chm generated from las
