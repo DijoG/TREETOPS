@@ -73,8 +73,8 @@ get_MARKER <- function(CHM_g, GTR_ccomponent, GTR_marker) {
     
     # i-th patch
     patchi = 
-      mask(CHM_g, ifel(GTR_ccomponent == P_unique[i], 1, NA)) %>% 
-      trim()
+      terra::mask(CHM_g, ifel(GTR_ccomponent == P_unique[i], 1, NA)) %>% 
+      terra::trim()
     
     # i-th marker
     mark =
@@ -136,7 +136,7 @@ get_GTR <- function(lmo_seg, new_tr) {
 get_CCC <- function(level_raster, level_rasterMINone, level = NULL) {
   
   # First emerged tree region 
-  m = mask(level_rasterMINone, level_raster,  maskvalues = 1, updatevalue = 2)
+  m = terra::mask(level_rasterMINone, level_raster,  maskvalues = 1, updatevalue = 2)
   if (1 %in% unique(values(m))) {
     m = ifel(m != 1, NA, m)
   } else {
@@ -242,7 +242,7 @@ finalize_TREETOPS <- function(sf_TREETOPS, distance, min_H, max_H = NULL) {
     sf_TREETOPS %>%
     arrange(desc(Z_level), desc(Z)) %>%
     mutate(treeID = 1:nrow(.))
-  ter_TREETOPS = vect(sf_TREETOPS)
+  ter_TREETOPS = terra::vect(sf_TREETOPS)
   
   
   # Removing treetops falling in distance ~ radius (m) 
@@ -319,7 +319,7 @@ M_match_TREETOPS <- function(refTT, testTT, CHM_g, eval_maxHD = 2, eval_maxD = 4
     refTT %>%
     mutate(ID = 1:nrow(.)) %>%
     select(ID) %>%
-    add_column(Z = extract(CHM_g, vect(refTT))$focal_mean, .after = 1)
+    add_column(Z = terra::extract(CHM_g, terra::vect(refTT))$focal_mean, .after = 1)
   
   testTT = 
     testTT %>%
@@ -336,9 +336,9 @@ M_match_TREETOPS <- function(refTT, testTT, CHM_g, eval_maxHD = 2, eval_maxD = 4
     cat("_____ treeID:", tID, "\r")
     
     # Getting the 3 nearest test trees (to the given reference tree)
-    nearID = data.table::data.table(nearby(vect(refTT %>%
+    nearID = data.table::data.table(nearby(terra::vect(refTT %>%
                                                   filter(treeID == tID)), 
-                                           vect(testTT), 
+                                           terra::vect(testTT), 
                                            k = 3)) %>%
       pivot_longer(cols = k1:k3, values_to = "id_test", names_to = "centroids") %>%
       rename("id_ref" = id) %>%
@@ -367,7 +367,7 @@ M_match_TREETOPS <- function(refTT, testTT, CHM_g, eval_maxHD = 2, eval_maxD = 4
     for (i in 1:nrow(toTT)) {
       L[[i]] = sf::st_linestring(rbind(as.numeric(sf::st_coordinates(fromTT)[-3]),
                                        as.numeric(sf::st_coordinates(toTT[i,]))))
-      V[[i]] = terra::extract(CHM_g, vect(L[[i]]))$focal_mean
+      V[[i]] = terra::extract(CHM_g, terra::vect(L[[i]]))$focal_mean
     }
     
     Zstart = fromTT$Z
