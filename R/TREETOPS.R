@@ -176,7 +176,7 @@ get_CCC <- function(level_raster, level_rasterMINone, level = NULL) {
   }
   
   pts_l = terra::vect(cbind(out_l[,1],out_l[,2]), crs = crs(level_raster)) # projection
-  #values(pts_l) = out_l[,3]
+  terra::values(pts_l) = out_l[,3]
   
   pts_l = sf::st_as_sf(pts_l)
   names(pts_l)[1] = "Z_level"
@@ -195,9 +195,6 @@ get_CCC <- function(level_raster, level_rasterMINone, level = NULL) {
 #' @return sf object
 #' @export
 get_TREETOPS <- function(CHM_g, min_H, level_increment = 0.2) {
-  
-  require(dplyr)
-  require(terra)
   
   # 1)
   height_bin <- get_HB(CHM_g, level_increment, min_H)
