@@ -53,7 +53,7 @@ get_LEVELz <- function(CHM_g, height_bin) {
   }
   
   RA = ra[sapply(ra, function(x) class(x)[1] == "SpatRaster")]
-  RAout = rast(RA)
+  RAout = terra::rast(RA)
   
   cat(crayon::silver("\n_____ Height bin ready\n"))
   return(RAout)
