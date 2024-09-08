@@ -24,17 +24,17 @@ Demonstration of how to use **TREETOPS**.
 
 ```r
 TREETOPS::check_PACKS()
-# Either:
+Either:
 > No need, packages already installed.
 or:
 > All packages installed.
 require(lidR)
 
-# Forest point cloud (low resolution example data)
+Forest point cloud (low resolution example data)
 LASfile <- system.file("extdata", "MixedConifer.laz", package = "lidR")
 Alas <- readLAS(LAS, filter = "-drop_z_below 0") 
 
-# Black, white and green color palette for visualizing CHM
+Black, white and green color palette for visualizing CHM
 bgcol <- function(x)
 {
   col = grDevices::colorRampPalette(c("grey1", "white", "forestgreen"))
