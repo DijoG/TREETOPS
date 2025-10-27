@@ -1,6 +1,6 @@
 # TREETOPS
 
-The **TREETOPS** package implements a Growing Tree Region (GTR) algorithm for detecting treetops in Canopy Height Models (CHMs) derived from low point density LiDAR data.
+The **TREETOPS** package implements a Growing Tree Region (GTR) algorithm for locating treetops in Canopy Height Models (CHMs) derived from low point density LiDAR data.
 
 Designed to work within the **lidR** package ecosystem, **TREETOPS** is intended to be coupled with CHM-based tree segmentation methods to complete an individual tree detection workflow. 
 
