@@ -1,23 +1,25 @@
-The **TREETOPS** package provides functions utilizing a growing tree region (GTR) treetop identification algorithm using low point density LiDAR data derived Canopy Height Model (CHM).The package is meant to be used within the framework of the lidR package and intends to be coupled with CHM-based tree segmentation methods. 
+# TREETOPS
 
-### Original paper
+The **TREETOPS** package provides functions utilizing a growing tree region (GTR) treetop location algorithm using low point density LiDAR data derived Canopy Height Model (CHM).The package is meant to be used within the framework of the **lidR** package and intends to be coupled with CHM-based tree segmentation methods. Parallelized treetop location option is provided.
+
+## Original paper
 *A new method for individual treetop detection with low-resolution aerial laser scanned data*
 
 https://doi.org/10.1007/s40808-024-02060-w
 
 
-### Required packages (make sure they are installed)
+## Required packages (make sure they are installed)
 
-tidyverse, terra, sf, data.table, crayon
+tidyverse, terra, sf, data.table, crayon, future.apply
 
 
-### Installation
+## Installation
 
 ```r
 devtools::install_github("DijoG/TREETOPS")
 ```
 
-# Example
+## Example
 Demonstration of how to use **TREETOPS**. 
 
 ### Data preparation
@@ -48,17 +50,39 @@ bgcol <- function(x)
 CHM <- rasterize_canopy(Alas, 0.5, pitfree(subcircle = 0.25))
 ```
 
-### Compute treetops (takes longer depending on the performance of your computer)
+### Compute treetops 
 
 ```r
-treetops <- TREETOPS::get_TREETOPS(CHM, min_H = 5)
+# 1) Original function 
+tictoc::tic()
+treetops_original <- get_TREETOPS(CHM, min_H = 5, level_increment = 0.2)
+tictoc::toc()
+# 811.9/60 ~ 13.5 mins
+
+# 2) Optimized sequential 
+tictoc::tic()
+treetops_optimized <- get_TREETOPS_optimized(CHM, min_H = 5, level_increment = 0.2)
+tictoc::toc()
+# 752.48/60 ~ 12.5 mins 
+
+# 3) Optimized with parallel processing
+# One tile per core (4 cores × 1 tile per core) 
+tictoc::tic()
+treetops_parallel <- get_TREETOPS_optimized(CHM, 
+                                            min_H = 5, 
+                                            level_increment = 0.2,
+                                            use_parallel = TRUE, 
+                                            n_cores = 4, 
+                                            cores_tile = 1)
+tictoc::toc()
+# 180.68/60 ~ 3 mins
 ```
 
 ### Visualize
 
 ```r
 plot(CHM, main = "CHM 0.5 pitfree ~ treetops", col = bgcol(50), axes = F)
-plot(sf::st_geometry(treetops), add = T, pch = 1, col = "firebrick3")
+plot(sf::st_geometry(treetops_parallel), add = T, pch = 1, col = "firebrick3")
 ```
 <img align="bottom" src="https://raw.githubusercontent.com/DijoG/storage/main/README/TREETOPS_01.png">
 
@@ -66,7 +90,7 @@ plot(sf::st_geometry(treetops), add = T, pch = 1, col = "firebrick3")
 
 ```r
 ?TREETOPS::finalize_TREETOPS
-fin_treetops <- TREETOPS::finalize_TREETOPS(treetops, distance = 5, min_H = 5)
+fin_treetops <- TREETOPS::finalize_TREETOPS(treetops_parallel, distance = 5, min_H = 5)
 ```
 
 ### Visualize
