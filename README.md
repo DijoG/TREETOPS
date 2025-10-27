@@ -4,7 +4,7 @@ The **TREETOPS** package implements a Growing Tree Region (GTR) algorithm for de
 
 Designed to work within the **lidR** package ecosystem, **TREETOPS** is intended to be coupled with CHM-based tree segmentation methods to complete an individual tree detection workflow. 
 
-**Update (27.10.2025):** A parallelized processing option for treetop location has been added, providing dramatically faster processing times.
+***Update (27.10.2025):*** A parallelized processing option for treetop location has been added, providing dramatically faster processing times.
 
 ## Original paper
 *A new method for individual treetop detection with low-resolution aerial laser scanned data*
