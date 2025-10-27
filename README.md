@@ -59,25 +59,25 @@ CHM <- rasterize_canopy(Alas, 0.5, pitfree(subcircle = 0.25))
 ```r
 # 1) Original function 
 tictoc::tic()
-treetops_original <- get_TREETOPS(CHM, min_H = 5, level_increment = 0.2)
+treetops_original <- TREETOPS::get_TREETOPS(CHM, min_H = 5, level_increment = 0.2)
 tictoc::toc()
 # 811.9/60 ~ 13.5 mins
 
 # 2) Optimized sequential 
 tictoc::tic()
-treetops_optimized <- get_TREETOPS_optimized(CHM, min_H = 5, level_increment = 0.2)
+treetops_optimized <- TREETOPS::get_TREETOPS_optimized(CHM, min_H = 5, level_increment = 0.2)
 tictoc::toc()
 # 752.48/60 ~ 12.5 mins 
 
 # 3) Optimized with parallel processing
 # One tile per core (4 cores × 1 tile per core) 
 tictoc::tic()
-treetops_parallel <- get_TREETOPS_optimized(CHM, 
-                                            min_H = 5, 
-                                            level_increment = 0.2,
-                                            use_parallel = TRUE, 
-                                            n_cores = 4, 
-                                            cores_tile = 1)
+treetops_parallel <- TREETOPS::get_TREETOPS_optimized(CHM, 
+                                                      min_H = 5, 
+                                                      level_increment = 0.2,
+                                                      use_parallel = TRUE, 
+                                                      n_cores = 4, 
+                                                      cores_tile = 1)
 tictoc::toc()
 # 180.68/60 ~ 3 mins
 ```
