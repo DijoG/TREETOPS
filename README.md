@@ -1,4 +1,4 @@
-# TREETOPS <img src="man/figures/logo.png" align="right" height="139" />
+# TREETOPS 🌳
 
 The **TREETOPS** R package implements a robust **G**rowing **T**ree **R**egion (GTR) algorithm for detecting treetops in Canopy Height Models (CHMs), especially those derived from low point-density LiDAR data.
 
