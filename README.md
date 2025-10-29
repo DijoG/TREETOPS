@@ -23,6 +23,7 @@ TREETOPS::check_PACKS()
 > No need, packages already installed.
 # or:
 > All packages installed.
+
 require(lidR)
 
 # Forest point cloud (low resolution example data)
