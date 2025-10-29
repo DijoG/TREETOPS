@@ -92,7 +92,7 @@ plot(sf::st_geometry(fin_treetops), add = T, pch = 16, col = "firebrick3")
 <img align="bottom" src="https://raw.githubusercontent.com/DijoG/storage/main/README/TREETOPS_02.png">
 
 ## Citation
-f you use TREETOPS in your research, please cite the original paper:
+If you use TREETOPS in your research, please cite the original paper:
 *A new method for individual treetop detection with low-resolution aerial laser scanned data*
 
 https://doi.org/10.1007/s40808-024-02060-w
