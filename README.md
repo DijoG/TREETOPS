@@ -1,21 +1,10 @@
-# TREETOPS
+# TREETOPS <img src="man/figures/logo.png" align="right" height="139" />
 
-The **TREETOPS** package implements a Growing Tree Region (GTR) algorithm for locating treetops in Canopy Height Models (CHMs) derived from low point density LiDAR data.
+The **TREETOPS** R package implements a robust **G**rowing **T**ree **R**egion (GTR) algorithm for detecting treetops in Canopy Height Models (CHMs), especially those derived from low point-density LiDAR data.
 
-Designed to work within the **lidR** package ecosystem, **TREETOPS** is intended to be coupled with CHM-based tree segmentation methods to complete an individual tree detection workflow. 
+Built for the `lidR` ecosystem, it provides a key component for CHM-based individual tree segmentation workflows. 
 
-***Update (27.10.2025):*** A parallelized processing option for treetop location has been added, providing dramatically faster processing times.
-
-## Original paper
-*A new method for individual treetop detection with low-resolution aerial laser scanned data*
-
-https://doi.org/10.1007/s40808-024-02060-w
-
-
-## Required packages 
-
-tidyverse, terra, sf, data.table, crayon, future.apply
-
+**NEWS (27.10.2025):** A new parallel processing option is now available, offering dramatically faster computation times.
 
 ## Installation
 
@@ -47,13 +36,11 @@ bgcol <- function(x)
   return(col(x))
 }
 ```
-
 ### Obtain CHM
 
 ```r
 CHM <- rasterize_canopy(Alas, 0.5, pitfree(subcircle = 0.25))
 ```
-
 ### Compute treetops 
 
 ```r
@@ -81,7 +68,6 @@ treetops_parallel <- TREETOPS::get_TREETOPS_optimized(CHM,
 tictoc::toc()
 # 180.68/60 ~ 3 mins
 ```
-
 ### Visualize
 
 ```r
@@ -96,7 +82,6 @@ plot(sf::st_geometry(treetops_parallel), add = T, pch = 1, col = "firebrick3")
 ?TREETOPS::finalize_TREETOPS
 fin_treetops <- TREETOPS::finalize_TREETOPS(treetops_parallel, distance = 5, min_H = 5)
 ```
-
 ### Visualize
 
 ```r
@@ -105,3 +90,12 @@ plot(sf::st_geometry(fin_treetops), add = T, pch = 16, col = "firebrick3")
 ```
 <img align="bottom" src="https://raw.githubusercontent.com/DijoG/storage/main/README/TREETOPS_02.png">
 
+## Citation
+f you use TREETOPS in your research, please cite the original paper:
+*A new method for individual treetop detection with low-resolution aerial laser scanned data*
+
+https://doi.org/10.1007/s40808-024-02060-w
+
+## Dependencies 
+
+The package requires the following R packages: `tidyvers`, `terra`, `sf`, `data.table`, `crayon`, `future.apply`. These will be installed automatically when you run the *check_PACKS()* function.
